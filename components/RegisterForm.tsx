@@ -8,14 +8,19 @@ import { Input } from '@/components/ui/input';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { registerFormSchema } from '@/lib/formSchema';
-import { register } from '@/app/_actions';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnClient';
+import { useRouter } from 'next/navigation';
+
+type registerData = z.infer<typeof registerFormSchema>;
 
 function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [alert, setAlert] = useState<string | null>(null);
+	const supabase = useSupabaseOnServer();
+	const router = useRouter();
 
-	const form = useForm<z.infer<typeof registerFormSchema>>({
+	const form = useForm<registerData>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
 			email: '',
@@ -23,8 +28,25 @@ function LoginForm() {
 			confirmPassword: '',
 		},
 	});
+	async function register(data: registerData) {
+		const result = registerFormSchema.safeParse(data);
 
-	async function onSubmit(data: z.infer<typeof registerFormSchema>) {
+		if (result.success) {
+			const { data, error } = await supabase.auth.signUp({
+				email: result.data.email,
+				password: result.data.password,
+			});
+
+			if (error) {
+				return { success: false, error: error.message };
+			}
+
+			return { success: true, data };
+		} else if (result.error) {
+			return { success: false, error: result.error.format() };
+		}
+	}
+	async function onSubmit(data: registerData) {
 		const result = await register(data);
 
 		if (!result) {
@@ -42,6 +64,7 @@ function LoginForm() {
 		// do something on success login
 		console.log('Successfully registered user');
 		setAlert(null);
+		router.refresh();
 	}
 	return (
 		<Form {...form}>

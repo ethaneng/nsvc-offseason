@@ -1,12 +1,15 @@
-import useSession from '@/lib/hooks/useSession';
+import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
 import Image from 'next/image';
 
 export default async function Home() {
-	const session = await useSession();
+	const supabase = useSupabaseOnServer();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between p-24">
 			<p>Some text</p>
-			{session && <p>{JSON.stringify(session)}</p>}
+			{user && <p>{JSON.stringify(user)}</p>}
 		</main>
 	);
 }

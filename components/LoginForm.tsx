@@ -8,14 +8,19 @@ import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { loginFormSchema } from '@/lib/formSchema';
-import { login } from '@/app/_actions';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
+import { useRouter } from 'next/navigation';
+
+type loginData = z.infer<typeof loginFormSchema>;
 
 function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [alert, setAlert] = useState<string | null>(null);
+	const supabase = useSupabaseOnClient();
+	const router = useRouter();
 
-	const form = useForm<z.infer<typeof loginFormSchema>>({
+	const form = useForm<loginData>({
 		resolver: zodResolver(loginFormSchema),
 		defaultValues: {
 			email: '',
@@ -23,7 +28,26 @@ function LoginForm() {
 		},
 	});
 
-	async function onSubmit(data: z.infer<typeof loginFormSchema>) {
+	async function login(data: loginData) {
+		const result = loginFormSchema.safeParse(data);
+
+		if (result.success) {
+			const { data, error } = await supabase.auth.signInWithPassword({
+				email: result.data.email,
+				password: result.data.password,
+			});
+
+			if (error) {
+				return { success: false, error: error.message };
+			}
+
+			return { success: true, data };
+		} else if (result.error) {
+			return { success: false, error: result.error.format() };
+		}
+	}
+
+	async function onSubmit(data: loginData) {
 		const result = await login(data);
 
 		if (!result) {
@@ -41,6 +65,7 @@ function LoginForm() {
 		// do something on success login
 		console.log('Successfully logged in');
 		setAlert(null);
+		router.refresh();
 	}
 
 	return (
