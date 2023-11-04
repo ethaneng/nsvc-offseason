@@ -1,6 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { Database } from '../../types/supabase';
 
 export default function useSupabaseOnServer() {
-	return createServerComponentClient({ cookies });
+	return createServerComponentClient<Database>({ cookies });
 }
