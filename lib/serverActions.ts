@@ -40,3 +40,31 @@ export async function getRegistrationsForEvent(event_id: number) {
 
 	return `${participants.length}/${maxRegistrations}`;
 }
+export async function getParticipantsForRegistration(rego_id: number) {
+	const supabase = useSupabaseOnServer();
+	// Get all associated registration types for the event
+	const { data: registrationTypes, error: registrationTypesError } = await supabase
+		.from('Registration_Type')
+		.select('*')
+		.eq('id', rego_id);
+
+	if (registrationTypesError) {
+		console.error(registrationTypesError);
+		return;
+	}
+
+	// Total the max number of registrations from each registration type
+	const maxRegistrations = registrationTypes[0].max_registrations;
+
+	// Get all the participants associated to each registration type
+	const { data: participants, error } = await supabase
+		.from('Participant')
+		.select('*')
+		.eq('registration_type', rego_id);
+
+	if (error) {
+		console.error(error);
+		return `?/${maxRegistrations}`;
+	}
+	return `${participants.length}/${maxRegistrations}`;
+}

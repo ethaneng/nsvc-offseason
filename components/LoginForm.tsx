@@ -17,6 +17,7 @@ type loginData = z.infer<typeof loginFormSchema>;
 function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [alert, setAlert] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
 	const supabase = useSupabaseOnClient();
 	const router = useRouter();
 
@@ -48,6 +49,7 @@ function LoginForm() {
 	}
 
 	async function onSubmit(data: loginData) {
+		setLoading(true);
 		const result = await login(data);
 
 		if (!result) {
@@ -62,10 +64,8 @@ function LoginForm() {
 			return;
 		}
 
-		// do something on success login
-		console.log('Successfully logged in');
-		setAlert(null);
 		router.refresh();
+		setLoading(false);
 	}
 
 	return (
@@ -118,7 +118,12 @@ function LoginForm() {
 					)}
 				/>
 				<hr />
-				<Button type="submit">Sign In</Button>
+				<Button
+					disabled={loading}
+					type="submit"
+				>
+					Sign In
+				</Button>
 			</form>
 		</Form>
 	);

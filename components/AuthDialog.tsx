@@ -2,7 +2,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import React, { useState } from 'react';
 import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
+import RegisterForm from './EventRegistration/RegisterForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Button, ButtonProps } from './ui/button';
 

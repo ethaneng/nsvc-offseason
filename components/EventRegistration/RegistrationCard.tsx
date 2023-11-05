@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Tables } from '@/types/supabase';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
-import LoginForm from './LoginForm';
-import AuthDialog from './AuthDialog';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import LoginForm from '../LoginForm';
+import AuthDialog from '../AuthDialog';
+import { RegisterCardButton, UnregisterCardButton } from './RegistrationCardButtons';
+import { getParticipantsForRegistration } from '@/lib/serverActions';
 
 type Props = { registrationType: Tables<'Registration_Type'>; event_id: number };
 
@@ -19,8 +21,12 @@ async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 		console.error(sessionError);
 		return <p>Something went wrong fetching data for the current user. Please try again later.</p>;
 	}
+
+	const participants = getParticipantsForRegistration(rego.id);
+
 	let hasRegisteredAnotherType = false;
 	let hasRegisteredThisType = false;
+
 	if (session) {
 		const { data, error } = await supabase
 			.from('event_registrations')
@@ -45,20 +51,30 @@ async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 		return <AuthDialog triggerText="Register" />;
 	}
 
-	async function onRegister() {}
-
-	async function onUnregister() {}
 	return (
 		<>
 			<Card>
 				<CardHeader>
-					<CardTitle>{rego.name}</CardTitle>
+					<CardTitle className="flex justify-between items-start">
+						<span>{rego.name}</span>
+						<span className="text-base text-muted-foreground">{participants}</span>
+					</CardTitle>
 					<CardDescription>{rego.description}</CardDescription>
 				</CardHeader>
 				<CardFooter>
-					{hasRegisteredThisType && <Button variant={'outline'}>Unregister</Button>}
 					{!session && <NotLoggedInButton />}
-					{session && !hasRegisteredAnotherType && !hasRegisteredThisType && <Button>Register</Button>}
+					{session && hasRegisteredThisType && (
+						<UnregisterCardButton
+							rego_id={rego.id}
+							user_id={session.user.id}
+						/>
+					)}
+					{session && !hasRegisteredAnotherType && !hasRegisteredThisType && (
+						<RegisterCardButton
+							rego_id={rego.id}
+							user_id={session.user.id}
+						/>
+					)}
 					{hasRegisteredAnotherType && (
 						<Button
 							disabled

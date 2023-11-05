@@ -3,7 +3,7 @@ import { Calendar, Clock, MapPin } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import moment from 'moment';
-import RegistrationCard from '@/components/RegistrationCard';
+import RegistrationCard from '@/components/EventRegistration/RegistrationCard';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { getRegistrationsForEvent } from '@/lib/serverActions';
 
