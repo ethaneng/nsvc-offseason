@@ -1,8 +1,8 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
 	NavigationMenu,
 	NavigationMenuItem,
+	NavigationMenuItemWithStyles,
 	NavigationMenuLink,
 	NavigationMenuList,
 	navigationMenuTriggerStyle,
@@ -21,74 +21,36 @@ import { User as UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import AuthDialog from './AuthDialog';
-import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
-import { Session } from '@supabase/supabase-js';
+import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
+import ProfileDropdown from './ProfileDropdown';
 
-function Nav() {
-	const supabase = useSupabaseOnClient();
-	const router = useRouter();
+async function Nav() {
+	const supabase = useSupabaseOnServer();
 
-	const [session, setSession] = useState<null | Session>(null);
-
-	useEffect(() => {
-		supabase.auth
-			.getSession()
-			.then((data) => {
-				if (data.data.session) {
-					setSession(data.data.session);
-				}
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}, []);
+	const {
+		data: { session },
+		error,
+	} = await supabase.auth.getSession();
+	if (error) {
+		console.error(error);
+		return;
+	}
 
 	return (
 		<div className="flex justify-between py-4">
 			<NavigationMenu>
 				<NavigationMenuList>
-					<NavigationMenuItem className={navigationMenuTriggerStyle()}>
+					<NavigationMenuItemWithStyles>
 						<NavigationMenuLink href="/">NSVC Offseason</NavigationMenuLink>
-					</NavigationMenuItem>
-					<NavigationMenuItem className={navigationMenuTriggerStyle()}>
+					</NavigationMenuItemWithStyles>
+					<NavigationMenuItemWithStyles>
 						<NavigationMenuLink href="/">Current Events</NavigationMenuLink>
-					</NavigationMenuItem>
+					</NavigationMenuItemWithStyles>
 				</NavigationMenuList>
 			</NavigationMenu>
 			<div className="flex items-center gap-4">
 				{!session && <AuthDialog buttonProps={{ variant: 'ghost' }} />}
-				{session && (
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant={'ghost'}
-								size={'icon'}
-							>
-								<UserIcon />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Profile</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem className="cursor-pointer">Settings</DropdownMenuItem>
-							<DropdownMenuItem
-								className="cursor-pointer"
-								onClick={() => {
-									supabase.auth
-										.signOut()
-										.then(() => {
-											router.refresh();
-										})
-										.catch((error) => {
-											console.error(error);
-										});
-								}}
-							>
-								Sign Out
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				)}
+				{session && <ProfileDropdown />}
 				<ModeToggle />
 			</div>
 		</div>
