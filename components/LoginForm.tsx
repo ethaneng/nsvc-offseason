@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { loginFormSchema } from '@/lib/formSchema';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 type loginData = z.infer<typeof loginFormSchema>;
 

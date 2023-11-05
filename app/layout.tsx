@@ -20,8 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					defaultTheme="dark"
 					enableSystem
 				>
-					<Nav></Nav>
-					{children}
+					<div className="flex flex-col h-screen w-screen max-w-[1900px] px-24 mx-auto">
+						<Nav />
+						{children}
+					</div>
 				</ThemeProvider>
 			</body>
 		</html>

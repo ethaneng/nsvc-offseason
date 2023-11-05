@@ -93,24 +93,37 @@ export interface Database {
 			};
 			Registration_Type: {
 				Row: {
+					created_by_user_id: string | null;
+					description: string | null;
 					event_id: number;
 					id: number;
 					max_registrations: number;
 					name: string;
 				};
 				Insert: {
+					created_by_user_id?: string | null;
+					description?: string | null;
 					event_id: number;
 					id?: number;
 					max_registrations: number;
 					name: string;
 				};
 				Update: {
+					created_by_user_id?: string | null;
+					description?: string | null;
 					event_id?: number;
 					id?: number;
 					max_registrations?: number;
 					name?: string;
 				};
 				Relationships: [
+					{
+						foreignKeyName: 'Registration_Type_created_by_user_id_fkey';
+						columns: ['created_by_user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
 					{
 						foreignKeyName: 'Registration_Type_event_id_fkey';
 						columns: ['event_id'];
@@ -122,7 +135,38 @@ export interface Database {
 			};
 		};
 		Views: {
-			[_ in never]: never;
+			event_registrations: {
+				Row: {
+					event_id: number | null;
+					participant_id: number | null;
+					registration_type_id: number | null;
+					title: string | null;
+					user_id: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'Participant_registration_type_fkey';
+						columns: ['registration_type_id'];
+						isOneToOne: false;
+						referencedRelation: 'Registration_Type';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'Participant_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'Registration_Type_event_id_fkey';
+						columns: ['event_id'];
+						isOneToOne: false;
+						referencedRelation: 'Event';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 		};
 		Functions: {
 			[_ in never]: never;

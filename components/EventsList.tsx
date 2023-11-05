@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { MapPin, CircleDollarSign, User, Calendar, Clock } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { getRegistrationsForEvent } from '@/lib/serverActions';
 
 type Props = {};
 
@@ -22,41 +23,7 @@ async function EventsList({}: Props) {
 					new Date(event.date).toLocaleTimeString().substring(0, 4) +
 					new Date(event.date).toLocaleTimeString().substring(7);
 
-				// Get all associated registration types for the event
-				const { data: registrationTypes, error: registrationTypesError } = await supabase
-					.from('Registration_Type')
-					.select('*')
-					.eq('event_id', event.id);
-
-				if (registrationTypesError) {
-					console.error(registrationTypesError);
-					return;
-				}
-
-				// Total the max number of registrations from each registration type
-				const maxRegistrations = registrationTypes?.reduce(
-					(acc, current) => acc + current.max_registrations,
-					0
-				);
-
-				// Get all the participants associated to each registration type
-				let participants: Tables<'Participant'>[] = [];
-
-				if (!registrationTypes) return;
-
-				for (let i = 0; i < registrationTypes.length; i++) {
-					const { data, error: registrationsError } = await supabase
-						.from('Participant')
-						.select('*')
-						.eq('registration_type', registrationTypes[i].id);
-
-					if (registrationsError) {
-						console.error(registrationsError);
-						return;
-					}
-
-					if (data !== null && data.length > 0) participants = participants.concat(data);
-				}
+				const registrations = getRegistrationsForEvent(event.id);
 
 				return (
 					<li className="col-span-1 ">
@@ -97,9 +64,7 @@ async function EventsList({}: Props) {
 									</Link>
 									<div className="flex gap-1 items-center text-muted-foreground ">
 										<User size={20} />
-										<span>
-											{participants.length}/{maxRegistrations}
-										</span>
+										<span>{registrations}</span>
 									</div>
 								</CardFooter>
 							</Card>
