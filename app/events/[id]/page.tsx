@@ -4,8 +4,9 @@ import { notFound } from 'next/navigation';
 import React from 'react';
 import moment from 'moment';
 import RegistrationCard from '@/components/EventRegistration/RegistrationCard';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getRegistrationsForEvent } from '@/lib/serverActions';
+import { register } from 'module';
 
 type Props = {
 	params: {
@@ -16,6 +17,7 @@ type Props = {
 async function page({ params }: Props) {
 	const supabase = useSupabaseOnServer();
 
+	// Lookup Event Data from DB
 	const { data: event, error: eventError } = await supabase.from('Event').select('*').eq('id', params.id).limit(1);
 
 	if (eventError) {
@@ -34,6 +36,7 @@ async function page({ params }: Props) {
 		new Date(event[0].date).toLocaleTimeString().substring(0, 4) +
 		new Date(event[0].date).toLocaleTimeString().substring(7);
 
+	// Lookup registration types from DB
 	const { data: registrationTypes, error: regoError } = await supabase
 		.from('Registration_Type')
 		.select('*')
@@ -41,6 +44,16 @@ async function page({ params }: Props) {
 
 	if (regoError) {
 		console.error(regoError);
+		return <p>Something went wrong fetching registration data for this event. Please try again later.</p>;
+	}
+
+	// Lookup registered members from DB
+	const { data: registeredMembers, error: memberError } = await supabase
+		.from('event_registrations')
+		.select('*')
+		.eq('event_id', event[0].id);
+
+	if (memberError) {
 		return <p>Something went wrong fetching registration data for this event. Please try again later.</p>;
 	}
 
@@ -74,6 +87,7 @@ async function page({ params }: Props) {
 							<RegistrationCard
 								event_id={event[0].id}
 								registrationType={regoType}
+								key={regoType.id}
 							/>
 						))
 					) : (
@@ -86,6 +100,30 @@ async function page({ params }: Props) {
 							<span>Current Registrations</span>
 							<div>{getRegistrationsForEvent(event[0].id)}</div>
 						</CardTitle>
+						<CardDescription>Currently signed up members</CardDescription>
+						<div>
+							{registrationTypes.map((regoType) => {
+								const members = registeredMembers.filter(
+									(member) => member.registration_type_id == regoType.id
+								);
+
+								if (members.length === 0) return;
+
+								return (
+									<ul key={regoType.id}>
+										<h3 className="font-semibold">{regoType.name}:</h3>
+										{members.map((member) => (
+											<li
+												className="font-light text-sm"
+												key={member.user_id}
+											>
+												- {member.email}
+											</li>
+										))}
+									</ul>
+								);
+							})}
+						</div>
 					</CardHeader>
 				</Card>
 			</div>

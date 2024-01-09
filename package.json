@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-types": "npx supabase gen types typescript --project-id 'teerdbkaytbujsalmyrp' --schema public > types/supabase.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -43,6 +44,6 @@
   },
   "devDependencies": {
     "encoding": "^0.1.13",
-    "supabase": "^1.110.1"
+    "supabase": "^1.131.3"
   }
 }

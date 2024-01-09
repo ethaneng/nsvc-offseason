@@ -1,7 +1,7 @@
 'use server';
 
 import useSupabaseOnServer from './hooks/useSupabaseOnServer';
-import { Tables } from '@/types/supabase';
+import { Tables } from '@/types/supabase2';
 
 export async function getRegistrationsForEvent(event_id: number) {
 	const supabase = useSupabaseOnServer();

@@ -2,7 +2,7 @@
 
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
 import React from 'react';
-import { Tables } from '@/types/supabase';
+import { Tables } from '@/types/supabase2';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { MapPin, CircleDollarSign, User, Calendar, Clock } from 'lucide-react';
 import { Button } from './ui/button';
