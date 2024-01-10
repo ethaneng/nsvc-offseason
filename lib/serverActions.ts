@@ -1,9 +1,10 @@
 'use server';
 
 import useSupabaseOnServer from './hooks/useSupabaseOnServer';
-import { Tables } from '@/types/supabase2';
+import { Tables } from '@/types/supabase';
 
 export async function getRegistrationsForEvent(event_id: number) {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const supabase = useSupabaseOnServer();
 	// Get all associated registration types for the event
 	const { data: registrationTypes, error: registrationTypesError } = await supabase
@@ -41,6 +42,7 @@ export async function getRegistrationsForEvent(event_id: number) {
 	return `${participants.length}/${maxRegistrations}`;
 }
 export async function getParticipantsForRegistration(rego_id: number) {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const supabase = useSupabaseOnServer();
 	// Get all associated registration types for the event
 	const { data: registrationTypes, error: registrationTypesError } = await supabase

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Tables } from '@/types/supabase';
+import { Database, Tables } from '@/types/supabase';
 import { Button } from '../ui/button';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
 import AuthDialog from '../AuthDialog';
@@ -25,23 +25,23 @@ async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 	let hasRegisteredAnotherType = false;
 	let hasRegisteredThisType = false;
 
-	if (session) {
-		const { data, error } = await supabase
-			.from('event_registrations')
-			.select('*')
-			.eq('event_id', event_id)
-			.eq('user_id', session.user.id);
+	if (!session) return <p>Something went wrong fetching data for the current session. Please try again later.</p>;
 
-		if (error) {
-			console.error(error);
-			return <p>Something went wrong fetching data for this registration type. Please try again later.</p>;
-		}
-		if (data.length > 0) {
-			if (data[0].registration_type_id === rego.id) {
-				hasRegisteredThisType = true;
-			} else {
-				hasRegisteredAnotherType = true;
-			}
+	const { data, error } = await supabase
+		.from('event_registrations')
+		.select('*')
+		.eq('event_id', event_id)
+		.eq('user_id', session.user.id);
+
+	if (error) {
+		console.error(error);
+		return <p>Something went wrong fetching data for this registration type. Please try again later.</p>;
+	}
+	if (data.length > 0) {
+		if (data[0].registration_type_id === rego.id) {
+			hasRegisteredThisType = true;
+		} else {
+			hasRegisteredAnotherType = true;
 		}
 	}
 
@@ -50,40 +50,38 @@ async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 	}
 
 	return (
-		<>
-			<Card>
-				<CardHeader>
-					<CardTitle className="flex justify-between items-start">
-						<span>{rego.name}</span>
-						<span className="text-base text-muted-foreground">{participants}</span>
-					</CardTitle>
-					<CardDescription>{rego.description}</CardDescription>
-				</CardHeader>
-				<CardFooter>
-					{!session && <NotLoggedInButton />}
-					{session && hasRegisteredThisType && (
-						<UnregisterCardButton
-							rego_id={rego.id}
-							user_id={session.user.id}
-						/>
-					)}
-					{session && !hasRegisteredAnotherType && !hasRegisteredThisType && (
-						<RegisterCardButton
-							rego_id={rego.id}
-							user_id={session.user.id}
-						/>
-					)}
-					{hasRegisteredAnotherType && (
-						<Button
-							disabled
-							variant={'outline'}
-						>
-							Already Registered
-						</Button>
-					)}
-				</CardFooter>
-			</Card>
-		</>
+		<Card className={hasRegisteredThisType ? 'border-primary' : ''}>
+			<CardHeader>
+				<CardTitle className="flex justify-between items-start">
+					<span>{rego.name}</span>
+					<span className="text-base text-muted-foreground">{participants}</span>
+				</CardTitle>
+				<CardDescription>{rego.description}</CardDescription>
+			</CardHeader>
+			<CardFooter>
+				{!session && <NotLoggedInButton />}
+				{session && hasRegisteredThisType && (
+					<UnregisterCardButton
+						rego_id={rego.id}
+						user_id={session.user.id}
+					/>
+				)}
+				{session && !hasRegisteredAnotherType && !hasRegisteredThisType && (
+					<RegisterCardButton
+						rego_id={rego.id}
+						user_id={session.user.id}
+					/>
+				)}
+				{hasRegisteredAnotherType && (
+					<Button
+						disabled
+						variant={'outline'}
+					>
+						Already Registered
+					</Button>
+				)}
+			</CardFooter>
+		</Card>
 	);
 }
 

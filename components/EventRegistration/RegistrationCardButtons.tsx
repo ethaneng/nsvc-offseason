@@ -3,19 +3,17 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
 import { useRouter } from 'next/navigation';
-import { Loader2Icon, LoaderIcon } from 'lucide-react';
+import { Loader2Icon } from 'lucide-react';
 
 export function RegisterCardButton({ rego_id, user_id }: { rego_id: number; user_id: string }) {
+	'use client';
 	const supabase = useSupabaseOnClient();
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 
 	async function register() {
 		setLoading(true);
-		const { error } = await supabase
-			.from('Participant')
-			.insert([{ registration_type: rego_id, user_id }])
-			.select();
+		const { error } = await supabase.from('Participant').insert({ registration_type: rego_id, user_id }).select();
 
 		if (error) {
 			console.error(error);
@@ -41,6 +39,7 @@ export function RegisterCardButton({ rego_id, user_id }: { rego_id: number; user
 }
 
 export function UnregisterCardButton({ rego_id, user_id }: { rego_id: number; user_id: string }) {
+	'use client';
 	const supabase = useSupabaseOnClient();
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);

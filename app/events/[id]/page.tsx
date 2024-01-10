@@ -4,9 +4,8 @@ import { notFound } from 'next/navigation';
 import React from 'react';
 import moment from 'moment';
 import RegistrationCard from '@/components/EventRegistration/RegistrationCard';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getRegistrationsForEvent } from '@/lib/serverActions';
-import { register } from 'module';
 
 type Props = {
 	params: {
@@ -15,6 +14,7 @@ type Props = {
 };
 
 async function page({ params }: Props) {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const supabase = useSupabaseOnServer();
 
 	// Lookup Event Data from DB
@@ -43,8 +43,7 @@ async function page({ params }: Props) {
 		.eq('event_id', event[0].id);
 
 	if (regoError) {
-		console.error(regoError);
-		return <p>Something went wrong fetching registration data for this event. Please try again later.</p>;
+		return <p>Something went wrong fetching the registration types for this event. Please try again later.</p>;
 	}
 
 	// Lookup registered members from DB
@@ -54,7 +53,8 @@ async function page({ params }: Props) {
 		.eq('event_id', event[0].id);
 
 	if (memberError) {
-		return <p>Something went wrong fetching registration data for this event. Please try again later.</p>;
+		console.error(regoError);
+		return <p>Something went wrong fetching the registered members for this event. Please try again later.</p>;
 	}
 
 	return (
@@ -117,7 +117,7 @@ async function page({ params }: Props) {
 												className="font-light text-sm"
 												key={member.user_id}
 											>
-												- {member.email}
+												- {member.first_name} {member.last_name}
 											</li>
 										))}
 									</ul>

@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { registerFormSchema } from '@/lib/formSchema';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnClient';
 import { useRouter } from 'next/navigation';
 

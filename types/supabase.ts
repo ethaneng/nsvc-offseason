@@ -11,7 +11,7 @@ export interface Database {
     Tables: {
       Event: {
         Row: {
-          created_by: string
+          created_by_user_id: string
           date: string
           description: string
           duration_hours: number | null
@@ -23,7 +23,7 @@ export interface Database {
           title: string
         }
         Insert: {
-          created_by: string
+          created_by_user_id: string
           date: string
           description: string
           duration_hours?: number | null
@@ -35,7 +35,7 @@ export interface Database {
           title: string
         }
         Update: {
-          created_by?: string
+          created_by_user_id?: string
           date?: string
           description?: string
           duration_hours?: number | null
@@ -48,10 +48,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "Event_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "Event_created_by_user_id_fkey"
+            columns: ["created_by_user_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "Users"
             referencedColumns: ["id"]
           }
         ]
@@ -90,14 +90,13 @@ export interface Database {
             foreignKeyName: "Participant_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "Users"
             referencedColumns: ["id"]
           }
         ]
       }
       Registration_Type: {
         Row: {
-          created_by_user_id: string | null
           description: string | null
           event_id: number
           id: number
@@ -105,7 +104,6 @@ export interface Database {
           name: string
         }
         Insert: {
-          created_by_user_id?: string | null
           description?: string | null
           event_id: number
           id?: number
@@ -113,7 +111,6 @@ export interface Database {
           name: string
         }
         Update: {
-          created_by_user_id?: string | null
           description?: string | null
           event_id?: number
           id?: number
@@ -121,13 +118,6 @@ export interface Database {
           name?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "Registration_Type_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "Registration_Type_event_id_fkey"
             columns: ["event_id"]
@@ -137,13 +127,40 @@ export interface Database {
           }
         ]
       }
+      Users: {
+        Row: {
+          first_name: string
+          id: string
+          last_name: string
+        }
+        Insert: {
+          first_name: string
+          id: string
+          last_name: string
+        }
+        Update: {
+          first_name?: string
+          id?: string
+          last_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Users_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       event_registrations: {
         Row: {
-          email: string | null
           event_id: number | null
           event_title: string | null
+          first_name: string | null
+          last_name: string | null
           participant_id: number | null
           registration_type_id: number | null
           rego_type_name: string | null
@@ -161,7 +178,7 @@ export interface Database {
             foreignKeyName: "Participant_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "Users"
             referencedColumns: ["id"]
           },
           {

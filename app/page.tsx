@@ -1,20 +1,13 @@
-import EventsList from '@/components/EventsList';
-import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
+import EventsList from '@/components/EventsList/EventsList';
+import { Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 
 export default async function Home() {
-	const supabase = useSupabaseOnServer();
-	const {
-		data: { user },
-		error,
-	} = await supabase.auth.getUser();
 	return (
 		<main className="flex h-full w-full flex-col justify-center items-center">
-			<Suspense fallback={<p>Loading</p>}>
+			<Suspense fallback={<Loader2 size={32} />}>
 				<EventsList />
 			</Suspense>
-			{user && <p>{JSON.stringify(user)}</p>}
-			{user && <p>{JSON.stringify(error)}</p>}
 		</main>
 	);
 }
