@@ -25,3 +25,10 @@ export const registerFormSchema = z
 			path: ['confirmPassword'],
 		}
 	);
+
+
+export const profileFormSchema = z.object({
+	email: z.string().email(),
+	firstName: z.string().min(2),
+	lastName: z.string().min(2)
+})

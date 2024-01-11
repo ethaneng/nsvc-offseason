@@ -4,8 +4,16 @@ import { Suspense } from 'react';
 
 export default async function Home() {
 	return (
-		<main className="flex h-full w-full flex-col justify-center items-center">
-			<Suspense fallback={<Loader2 size={32} />}>
+		<main className="flex h-full w-full flex-col justify-start items-center gap-8">
+			<h1 className="self-start text-4xl font-semibold">Upcoming Events:</h1>
+			<Suspense
+				fallback={
+					<Loader2
+						size={32}
+						className="animate-spin"
+					/>
+				}
+			>
 				<EventsList />
 			</Suspense>
 		</main>

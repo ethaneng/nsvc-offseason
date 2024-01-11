@@ -5,20 +5,20 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Loader2Icon, MailCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { registerFormSchema } from '@/lib/formSchema';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnClient';
-import { useRouter } from 'next/navigation';
 
 type registerData = z.infer<typeof registerFormSchema>;
 
 function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [alert, setAlert] = useState<string | null>(null);
+	const [success, setSuccess] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const supabase = useSupabaseOnServer();
-	const router = useRouter();
 
 	const form = useForm<registerData>({
 		resolver: zodResolver(registerFormSchema),
@@ -47,24 +47,28 @@ function LoginForm() {
 		}
 	}
 	async function onSubmit(data: registerData) {
+		setLoading(true);
 		const result = await register(data);
 
 		if (!result) {
 			console.error('Did not return result from register attempt');
 			setAlert('Something went wrong! Please try again later.');
+			setLoading(false);
 			return;
 		}
 
 		if (result.error) {
 			console.error('Error occurred during register attempt', result.error);
 			setAlert(result.error.toString());
+			setLoading(false);
 			return;
 		}
 
 		// do something on success login
-		console.log('Successfully registered user');
 		setAlert(null);
-		router.refresh();
+		setSuccess(true);
+		setLoading(false);
+		return;
 	}
 	return (
 		<Form {...form}>
@@ -77,6 +81,15 @@ function LoginForm() {
 						<AlertCircle className="h-4 w-4" />
 						<AlertTitle>Error</AlertTitle>
 						<AlertDescription>{alert}</AlertDescription>
+					</Alert>
+				)}
+				{success && (
+					<Alert className="border-primary">
+						<MailCheck className="h-4 w-4" />
+						<AlertTitle>Success!</AlertTitle>
+						<AlertDescription>
+							Registration successful! Please check your email for further instruction.
+						</AlertDescription>
 					</Alert>
 				)}
 				<FormField
@@ -143,7 +156,18 @@ function LoginForm() {
 					)}
 				/>
 				<hr />
-				<Button type="submit">Create Account</Button>
+				<Button
+					disabled={success || loading || alert !== null}
+					type="submit"
+				>
+					Create Account{' '}
+					{loading && (
+						<Loader2Icon
+							size={16}
+							className="ml-2 animate-spin"
+						/>
+					)}
+				</Button>
 			</form>
 		</Form>
 	);

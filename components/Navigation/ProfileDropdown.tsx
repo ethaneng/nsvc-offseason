@@ -7,11 +7,12 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '../ui/dropdown-menu';
 import { UserIcon } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 function ProfileDropdown() {
 	const supabase = useSupabaseOnClient();
@@ -29,7 +30,9 @@ function ProfileDropdown() {
 			<DropdownMenuContent align="end">
 				<DropdownMenuLabel>Profile</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="cursor-pointer">Settings</DropdownMenuItem>
+				<DropdownMenuItem className="cursor-pointer">
+					<Link href={'/profile'}>Settings</Link>
+				</DropdownMenuItem>
 				<DropdownMenuItem
 					className="cursor-pointer"
 					onClick={() => {

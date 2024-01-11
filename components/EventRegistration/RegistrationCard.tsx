@@ -3,7 +3,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/
 import { Database, Tables } from '@/types/supabase';
 import { Button } from '../ui/button';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
-import AuthDialog from '../AuthDialog';
+import AuthDialog from '../Auth/AuthDialog';
 import { RegisterCardButton, UnregisterCardButton } from './RegistrationCardButtons';
 import { getParticipantsForRegistration } from '@/lib/serverActions';
 
