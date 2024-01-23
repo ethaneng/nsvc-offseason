@@ -76,82 +76,84 @@ function page() {
 
 	return (
 		<ProtectedContent>
-			<Card>
-				<CardHeader>
-					<CardTitle>Profile Settings</CardTitle>
-				</CardHeader>
+			<div className="px-24 mt-8">
+				<Card>
+					<CardHeader>
+						<CardTitle>Profile Settings</CardTitle>
+					</CardHeader>
 
-				<CardContent>
-					<Form {...form}>
-						<form
-							onSubmit={form.handleSubmit(onSubmit)}
-							className="flex flex-col gap-4"
-						>
-							{alert && (
-								<Alert className="border-destructive">
-									<AlertCircleIcon />
-									<AlertTitle className="ml-2">Oops! Something went wrong</AlertTitle>
-									<AlertDescription className="ml-2">
-										An error occurred when trying to update your profile information. Please try
-										again later.
-									</AlertDescription>
-								</Alert>
-							)}
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Email</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							></FormField>
-							<FormField
-								control={form.control}
-								name="firstName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>First Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							></FormField>
-							<FormField
-								control={form.control}
-								name="lastName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Last Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							></FormField>
-							<Button
-								disabled={!form.formState.isDirty || alert || form.formState.isSubmitting}
-								type="submit"
+					<CardContent>
+						<Form {...form}>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="flex flex-col gap-4"
 							>
-								Update Settings
-								{form.formState.isSubmitting && (
-									<Loader2Icon
-										size={16}
-										className="animate-spin ml-2"
-									/>
+								{alert && (
+									<Alert className="border-destructive">
+										<AlertCircleIcon />
+										<AlertTitle className="ml-2">Oops! Something went wrong</AlertTitle>
+										<AlertDescription className="ml-2">
+											An error occurred when trying to update your profile information. Please try
+											again later.
+										</AlertDescription>
+									</Alert>
 								)}
-							</Button>
-						</form>
-					</Form>
-				</CardContent>
-			</Card>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								></FormField>
+								<FormField
+									control={form.control}
+									name="firstName"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>First Name</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								></FormField>
+								<FormField
+									control={form.control}
+									name="lastName"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Last Name</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								></FormField>
+								<Button
+									disabled={!form.formState.isDirty || alert || form.formState.isSubmitting}
+									type="submit"
+								>
+									Update Settings
+									{form.formState.isSubmitting && (
+										<Loader2Icon
+											size={16}
+											className="animate-spin ml-2"
+										/>
+									)}
+								</Button>
+							</form>
+						</Form>
+					</CardContent>
+				</Card>
+			</div>
 		</ProtectedContent>
 	);
 }

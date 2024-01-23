@@ -27,7 +27,7 @@ async function page({ params }: Props) {
 		return <p>Something went wrong fetching data for this event. Please try again.</p>;
 	}
 
-	const isExpired = new Date(event[0].date) > new Date();
+	const isExpired = new Date(event[0].date) < new Date();
 
 	// No event with given id found
 	if (event.length === 0) {
@@ -63,7 +63,7 @@ async function page({ params }: Props) {
 	}
 
 	return (
-		<section>
+		<section className="px-24 mt-8">
 			<h1 className="text-2xl font-bold">{event[0].title}</h1>
 			<div className="flex justify-between text-muted-foreground">
 				<div className="flex gap-1 items-center">

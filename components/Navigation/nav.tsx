@@ -10,8 +10,6 @@ import Link from 'next/link';
 
 async function Nav() {
 	const supabase = useSupabaseOnServer();
-	console.log('Grabbing nav');
-
 	const {
 		data: { session },
 		error,
