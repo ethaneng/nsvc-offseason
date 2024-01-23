@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
+import useSupabaseOnClient from '@/lib/hooks/useSupabaseOnClient';
 import { MailCheck, MailWarning } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 function page() {
 	const router = useRouter();
-	const supabase = useSupabaseOnServer();
+	const supabase = useSupabaseOnClient();
 	const params = useSearchParams();
 
 	const [isSuccess, setSuccess] = useState(false);
