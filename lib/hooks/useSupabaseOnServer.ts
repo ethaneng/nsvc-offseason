@@ -3,5 +3,6 @@ import { cookies } from 'next/headers';
 import { Database } from '../../types/supabase';
 
 export default function useSupabaseOnServer() {
-	return createServerComponentClient<Database>({ cookies });
+	const cookieStore = cookies()
+	return createServerComponentClient<Database>({ cookies: () => cookieStore });
 }
