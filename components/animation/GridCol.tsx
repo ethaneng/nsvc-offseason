@@ -22,7 +22,7 @@ function GridCol({ size }: { size: number }) {
 			}
 		}
 		setCells(initialCells);
-	}, []);
+	}, [SIZE]);
 
 	// Calculates the positions of cells on next render and spawns in new cell from the top depending on probabiliity
 	const next = useCallback(() => {

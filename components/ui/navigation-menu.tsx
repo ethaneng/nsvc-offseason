@@ -34,6 +34,7 @@ const NavigationMenuList = React.forwardRef<
 NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
+// eslint-disable-next-line react/display-name
 const NavigationMenuItemWithStyles = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Item>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Item>
