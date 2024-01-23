@@ -20,17 +20,6 @@ async function Nav() {
 		console.error(error);
 		return;
 	}
-	console.log('Got nav', session);
-	const { data: user, error: userError } = await supabase
-		.from('Users')
-		.select('*')
-		.eq('id', session!.user.id)
-		.limit(1)
-		.single();
-	if (userError) {
-		console.error(userError);
-		return;
-	}
 	return (
 		<div className="flex justify-between py-4">
 			<NavigationMenu>
