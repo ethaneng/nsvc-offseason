@@ -6,6 +6,8 @@ import Nav from '@/components/Navigation/nav';
 
 const DmSans = DM_Sans({ subsets: ['latin'] });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: 'NSVC Events',
 };
