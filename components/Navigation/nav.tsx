@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 async function Nav() {
 	const supabase = useSupabaseOnServer();
+	console.log('Grabbing nav');
 
 	const {
 		data: { session },
@@ -19,6 +20,7 @@ async function Nav() {
 		console.error(error);
 		return;
 	}
+	console.log('Got nav');
 	const { data: user, error: userError } = await supabase
 		.from('Users')
 		.select('*')
