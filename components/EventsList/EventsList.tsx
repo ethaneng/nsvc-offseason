@@ -7,7 +7,11 @@ type Props = {};
 
 async function EventsList({}: Props) {
 	const supabase = useSupabaseOnServer();
-	const { data, error } = await supabase.from('Event').select('*');
+	const { data, error } = await supabase
+		.from('Event')
+		.select('*')
+		.gte('date', new Date().toISOString())
+		.order('date', { ascending: true });
 	if (error) {
 		console.error(error);
 		return <p>There was an error fetching the available events. Please try again later.</p>;

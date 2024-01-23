@@ -1,5 +1,5 @@
 'use client';
-import ProtectedContent from '@/components/protectedContent';
+import ProtectedContent from '@/components/ProtectedContent';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 /* eslint-disable react-hooks/rules-of-hooks */

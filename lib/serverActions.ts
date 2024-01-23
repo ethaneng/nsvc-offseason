@@ -1,4 +1,5 @@
 'use server';
+import { newEventSchema } from '@/lib/formSchema';
 
 import useSupabaseOnServer from './hooks/useSupabaseOnServer';
 import { Tables } from '@/types/supabase';
@@ -69,4 +70,33 @@ export async function getParticipantsForRegistration(rego_id: number) {
 		return `?/${maxRegistrations}`;
 	}
 	return `${participants.length}/${maxRegistrations}`;
+}
+export async function createEvent(values: Zod.infer<typeof newEventSchema>, isAM: boolean) {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const supabase = useSupabaseOnServer()
+	const {data: {user}, error: userError} = await supabase.auth.getUser()
+	if (userError) {
+		console.error(userError)
+		throw userError
+	}
+	const dateTime = values.date;
+	const hours = values.time.length === 4 ? Number(values.time[0]) : Number(values.time.slice(0,2))
+	const mins = values.time.length === 4 ? Number(values.time.slice(2)) : Number(values.time.slice(3))
+	dateTime.setHours(isAM ? hours : hours + 12);
+	dateTime.setMinutes(mins);
+
+	const {error} = await supabase.from('Event').insert({
+		title: values.title,
+		description: values.description,
+		date: dateTime.toISOString(),
+		location: values.location,
+		created_by_user_id: user!.id,
+		duration_hours: values.duration ? Number(values.duration) : undefined,
+		price: values.price ? Number(values.price) : undefined,
+	})
+
+	if (error) {
+		console.error(error)
+		throw error
+	}
 }

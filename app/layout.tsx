@@ -1,10 +1,10 @@
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import Nav from '@/components/Navigation/nav';
 
-const inter = Inter({ subsets: ['latin'] });
+const DmSans = DM_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'NSVC Events',
@@ -16,16 +16,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			suppressHydrationWarning={true}
 			lang="en"
 		>
-			<body className={inter.className}>
+			<body className={DmSans.className + ' w-full h-full'}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
 					enableSystem
 				>
-					<div className="max-w-[1900px] px-4 mx-auto border-b border-muted mb-8">
-						<Nav />
+					<div className="flex flex-col h-screen">
+						<div className="px-4 border-b border-muted z-10 bg-background w-scre">
+							<Nav />
+						</div>
+						{children}
 					</div>
-					<div className="flex flex-col h-screen w-screen max-w-[1900px] px-24 mx-auto">{children}</div>
 				</ThemeProvider>
 			</body>
 		</html>

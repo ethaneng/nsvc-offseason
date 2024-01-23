@@ -1,11 +1,13 @@
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { AlertCircleIcon, Calendar, Clock, MapPin } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import moment from 'moment';
 import RegistrationCard from '@/components/EventRegistration/RegistrationCard';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getRegistrationsForEvent } from '@/lib/serverActions';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import Link from 'next/link';
 
 type Props = {
 	params: {
@@ -25,11 +27,14 @@ async function page({ params }: Props) {
 		return <p>Something went wrong fetching data for this event. Please try again.</p>;
 	}
 
+	const isExpired = new Date(event[0].date) > new Date();
+
 	// No event with given id found
 	if (event.length === 0) {
 		console.log('Tried to view event with id ' + params.id + '. Navigating back to home page.');
 		notFound();
 	}
+	const registrations = await getRegistrationsForEvent(event[0].id);
 
 	// Format time string to remove seconds
 	const time =
@@ -78,6 +83,22 @@ async function page({ params }: Props) {
 			</div>
 			<p className="mt-4">{event[0].description}</p>
 
+			{isExpired && (
+				<Alert className="mt-4 border-orange-800">
+					<AlertTitle className="flex items-center text-muted-foreground">
+						<AlertCircleIcon className="mr-2 text-orange-700 " />
+						This event has already occurred. To see upcoming events click
+						<Link
+							className="ml-1 underline"
+							href={'/'}
+						>
+							here
+						</Link>
+						.
+					</AlertTitle>
+				</Alert>
+			)}
+
 			<h2 className="text-lg text-muted-foreground my-4">Registrations</h2>
 
 			<div className="grid grid-cols-2 gap-4">
@@ -98,7 +119,7 @@ async function page({ params }: Props) {
 					<CardHeader>
 						<CardTitle className="flex justify-between">
 							<span>Current Registrations</span>
-							<div>{getRegistrationsForEvent(event[0].id)}</div>
+							<div>{registrations}</div>
 						</CardTitle>
 						<CardDescription>Currently signed up members</CardDescription>
 						<div>

@@ -131,16 +131,19 @@ export interface Database {
         Row: {
           first_name: string
           id: string
+          isAdmin: boolean
           last_name: string
         }
         Insert: {
           first_name: string
           id: string
+          isAdmin?: boolean
           last_name: string
         }
         Update: {
           first_name?: string
           id?: string
+          isAdmin?: boolean
           last_name?: string
         }
         Relationships: [

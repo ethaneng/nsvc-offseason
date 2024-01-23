@@ -9,6 +9,9 @@ import { getParticipantsForRegistration } from '@/lib/serverActions';
 
 type Props = { registrationType: Tables<'Registration_Type'>; event_id: number };
 
+function NotLoggedInButton() {
+	return <AuthDialog triggerText="Register" />;
+}
 async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 	const supabase = useSupabaseOnServer();
 	const {
@@ -20,33 +23,29 @@ async function RegistrationCard({ registrationType: rego, event_id }: Props) {
 		return <p>Something went wrong fetching data for the current user. Please try again later.</p>;
 	}
 
-	const participants = getParticipantsForRegistration(rego.id);
+	const participants = await getParticipantsForRegistration(rego.id);
 
 	let hasRegisteredAnotherType = false;
 	let hasRegisteredThisType = false;
 
-	if (!session) return <p>Something went wrong fetching data for the current session. Please try again later.</p>;
+	if (session) {
+		const { data, error } = await supabase
+			.from('event_registrations')
+			.select('*')
+			.eq('event_id', event_id)
+			.eq('user_id', session.user.id);
 
-	const { data, error } = await supabase
-		.from('event_registrations')
-		.select('*')
-		.eq('event_id', event_id)
-		.eq('user_id', session.user.id);
-
-	if (error) {
-		console.error(error);
-		return <p>Something went wrong fetching data for this registration type. Please try again later.</p>;
-	}
-	if (data.length > 0) {
-		if (data[0].registration_type_id === rego.id) {
-			hasRegisteredThisType = true;
-		} else {
-			hasRegisteredAnotherType = true;
+		if (error) {
+			console.error(error);
+			return <p>Something went wrong fetching data for this registration type. Please try again later.</p>;
 		}
-	}
-
-	function NotLoggedInButton() {
-		return <AuthDialog triggerText="Register" />;
+		if (data.length > 0) {
+			if (data[0].registration_type_id === rego.id) {
+				hasRegisteredThisType = true;
+			} else {
+				hasRegisteredAnotherType = true;
+			}
+		}
 	}
 
 	return (

@@ -32,3 +32,13 @@ export const profileFormSchema = z.object({
 	firstName: z.string().min(2),
 	lastName: z.string().min(2)
 })
+
+export const newEventSchema = z.object({
+	title: z.string().min(4),
+	description: z.string(),
+	date: z.date(),
+	time: z.string(),
+	location: z.string(),
+	price: z.string().optional(),
+	duration: z.string().optional()
+})

@@ -18,7 +18,16 @@ async function Nav() {
 		console.error(error);
 		return;
 	}
-
+	const { data: user, error: userError } = await supabase
+		.from('Users')
+		.select('*')
+		.eq('id', session!.user.id)
+		.limit(1)
+		.single();
+	if (userError) {
+		console.error(userError);
+		return;
+	}
 	return (
 		<div className="flex justify-between py-4">
 			<NavigationMenu>
@@ -31,6 +40,10 @@ async function Nav() {
 					<NavItem
 						label="Current Events"
 						href="/"
+					/>
+					<NavItem
+						label="Create"
+						href="/create"
 					/>
 				</NavigationMenuList>
 			</NavigationMenu>
