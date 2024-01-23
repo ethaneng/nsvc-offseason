@@ -6,6 +6,7 @@ import AuthDialog from '../Auth/AuthDialog';
 import useSupabaseOnServer from '@/lib/hooks/useSupabaseOnServer';
 import ProfileDropdown from './ProfileDropdown';
 import NavItem from './NavItem';
+import Link from 'next/link';
 
 async function Nav() {
 	const supabase = useSupabaseOnServer();
@@ -33,13 +34,16 @@ async function Nav() {
 			<NavigationMenu>
 				<NavigationMenuList>
 					<NavigationMenuItem className="mr-2">
-						<label className={'font-bold text-xl '}>
+						<Link
+							href={'/'}
+							className={'font-bold text-xl '}
+						>
 							Northern <span className="text-blue-500">Stars</span>
-						</label>
+						</Link>
 					</NavigationMenuItem>
 					<NavItem
 						label="Current Events"
-						href="/"
+						href="/home"
 					/>
 					<NavItem
 						label="Create"

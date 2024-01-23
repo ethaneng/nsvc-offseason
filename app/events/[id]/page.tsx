@@ -90,7 +90,7 @@ async function page({ params }: Props) {
 						This event has already occurred. To see upcoming events click
 						<Link
 							className="ml-1 underline"
-							href={'/'}
+							href={'/home'}
 						>
 							here
 						</Link>
