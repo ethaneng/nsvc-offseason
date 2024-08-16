@@ -26,6 +26,6 @@ export default function useClientAdmin() {
       setIsAdmin(Boolean(data?.isAdmin))
     }
     checkAdmin()
-  }, [])
+  }, [supabase])
   return isAdmin
 }

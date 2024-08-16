@@ -11,6 +11,7 @@ import useServerAdmin from '@/lib/hooks/useServerAdmin';
 
 async function Nav() {
   const supabase = useSupabaseOnServer();
+  const isAdmin = await useServerAdmin()
   const {
     data: { session },
     error,
@@ -19,7 +20,6 @@ async function Nav() {
     console.error(error);
     return;
   }
-  const isAdmin = await useServerAdmin()
   return (
     <div className="flex justify-between py-4">
       <NavigationMenu>

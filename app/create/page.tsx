@@ -123,7 +123,6 @@ function page() {
   return (
     <ProtectedContent>
       <div className="mt-8 container">
-      {isAdmin && 'sld'}
         <Card>
           <CardHeader>
             <CardTitle>New Event</CardTitle>
@@ -266,7 +265,7 @@ function page() {
                 <div id='newFormPortal' className='col-span-12 md:col-span-6 relative'>
                   {!newFormPortal && <div className='flex h-full w-full items-center justify-center'>
                     <Loader2Icon className='animate-spin' />
-                    </div>}
+                  </div>}
                 </div>
 
                 <div className='col-span-12 md:col-span-6 space-y-2 mb-2'>
@@ -276,7 +275,7 @@ function page() {
 
                   {!fields.length && <div className='w-full h-full min-h-[240px] bg-muted/50 rounded-md relative'>
                     <p className='absolute text-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm text-muted-foreground'>
-                      You haven't created any registration types yet.
+                      You haven{"'"}t created any registration types yet.
                     </p>
                   </div>
                   }
