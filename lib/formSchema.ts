@@ -26,19 +26,25 @@ export const registerFormSchema = z
 		}
 	);
 
-
 export const profileFormSchema = z.object({
 	email: z.string().email(),
-	firstName: z.string().min(2),
-	lastName: z.string().min(2)
-})
+	firstName: z.string().min(2, 'First name must be at least 2 characters.'),
+	lastName: z.string().min(2, 'Last name must be at least 2 characters.'),
+});
+
+export const registrationTypeSchema = z.object({
+	name: z.string().min(2, 'Registration name must be at least 2 characters.'),
+  amount: z.coerce.number().min(1, 'There must at least one registration of this type available.'),
+  description: z.string()
+});
 
 export const newEventSchema = z.object({
-	title: z.string().min(4),
+	title: z.string().min(4, 'Event title must be at least 4 characters.'),
 	description: z.string(),
-	date: z.date(),
-	time: z.string(),
-	location: z.string(),
+	date: z.date().refine((date) => date > new Date(), {message: 'Date must be in the future.'}),
+	time: z.string().min(5,'Please use the hh:mm format (i.e 09:30).'),
+	location: z.string().min(3, 'Location name must be at least 4 characters.'),
 	price: z.string().optional(),
-	duration: z.string().optional()
-})
+	duration: z.string().optional(),
+	registrationTypes: z.array(registrationTypeSchema).min(1),
+});

@@ -24,7 +24,7 @@ async function EventCard({ event }: { event: Tables<'Event'> }) {
 					<div>
 						<CardHeader>
 							<CardTitle className="flex justify-between">
-								<span>{event.title}</span>
+								<Link className='hover:underline' href={`/event/${event.id}`}>{event.title}</Link>
 								<span className="text-muted-foreground ">
 									{event.price ? '$' + event.price : 'Free'}
 								</span>

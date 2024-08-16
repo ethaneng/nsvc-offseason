@@ -24,8 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					defaultTheme="dark"
 					enableSystem
 				>
-					<div className="flex flex-col h-screen">
-						<div className="px-4 border-b border-muted z-10 bg-background w-scre">
+					<div className="flex flex-col h-screen w-full">
+						<div className="container border-b border-muted z-10 bg-background">
 							<Nav />
 						</div>
 						{children}
