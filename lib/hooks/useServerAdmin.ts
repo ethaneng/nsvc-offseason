@@ -1,24 +1,27 @@
 import useSupabaseOnServer from "./useSupabaseOnServer";
 
 export default async function useServerAdmin() {
-  const supabase = useSupabaseOnServer()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const supabase = useSupabaseOnServer();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
   if (error) {
-    console.error(error)
-    return false
+    console.error(error);
+    return false;
   }
 
   const { data, error: queryError } = await supabase
-    .from('Users')
-    .select('isAdmin')
-    .eq('id', user?.id!)
+    .from("Users")
+    .select("isAdmin")
+    .eq("id", user?.id!)
     .limit(1)
-    .single()
+    .single();
 
   if (queryError) {
-    console.error(queryError)
-    return false
+    console.error(queryError);
+    return false;
   }
-  return Boolean(data?.isAdmin)
+  return Boolean(data?.isAdmin);
 }
-
